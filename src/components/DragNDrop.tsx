@@ -1,43 +1,53 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 import { Status, Data } from "../interfaces";
 import Container from "./Container";
-import {data} from '../assets/index'
+// import { data } from "../assets/index";
 
 const todoTypes: Array<Status> = ["task", "in-progress", "done"];
 
 function DragNDrop() {
   const [isDragging, setIsDragging] = useState(false);
-  const [listItems, setListItems] = useState<Data[]>([])
+  const [listItems, setListItems] = useState<Data[]>([]);
 
   const handleDragging = (dragging: boolean) => setIsDragging(dragging);
 
-
-  const handleUpdateList = (id:number, status:Status) => {
+  const handleUpdateList = (id: number, status: Status) => {
     //find the item by id..
-    let card = listItems.find(item => item.id === id)
+    let task = listItems.find((item) => item.id === id);
 
     //update list...
-    if (card && card.status !== status) {
+    if (task && task.status !== status) {
+      task.status = status;
 
-      card.status = status
+      axios
+        .put(`http://127.0.0.1:8000/api/todos/${id}`, task)
+        .then((res) => console.log(res.data, "after up"))
+        .catch((err) => new Error("data failed to update"));
 
-      setListItems( prev => ([
-           card!,
-           ...prev.filter(item => item.id !== id)
-       ]))
+      // setListItems((prev) => [task!, ...prev.filter((item) => item.id !== id)]);
     }
+  };
 
-  }
-
-  useEffect(()=> {
-     setListItems(data)
-  },[data])
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/api/todos")
+      .then((res) => setListItems(res.data))
+      .catch((err) => new Error("data not found"));
+  }, []);
 
   return (
     <div className="grid grid-flow-col justify-center gap-5 items-center">
       {todoTypes.map((item, index) => (
-        <Container status={item} key={index} items={listItems} isDragging={isDragging} handleDragging={handleDragging} handleUpdateList={handleUpdateList}/>
+        <Container
+          status={item}
+          key={index}
+          items={listItems}
+          isDragging={isDragging}
+          handleDragging={handleDragging}
+          handleUpdateList={handleUpdateList}
+        />
       ))}
     </div>
   );
