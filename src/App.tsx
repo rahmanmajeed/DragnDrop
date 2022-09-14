@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Title } from "./components";
+import { DragNDrop, Title } from "./components";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -7,6 +7,7 @@ function App() {
   return (
     <div className="">
       <Title />
+      <DragNDrop />
     </div>
   );
 }
