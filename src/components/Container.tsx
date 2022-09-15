@@ -19,7 +19,6 @@ function Container({
 }: Props) {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    console.log(e.dataTransfer.getData("text"), status);
     handleUpdateList(+e.dataTransfer.getData("text"), status);
     handleDragging(false);
   };
@@ -34,7 +33,7 @@ function Container({
         onDragOver={handleDragOver}
         className={`border border-gray-400 shadow-lg h-full w-64 min-h-[80vh] max-h-64 ${
           isDragging
-            ? "bg-purple-100 border-[2px] border-dashed border-purple-100"
+            ? "bg-orange-300 border-[2px] border-dashed border-purple-100"
             : ""
         }`}
       >
